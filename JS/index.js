@@ -1,12 +1,86 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
+const chakras = [
+  {
+    num: 1,
+    position: "Raiz",
+    sansName: "Muladhara",
+    frase: "Yo tengo",
+    element: "Tierra",
+    characteristic: "Supervivencia",
+    blocks: "Miedo",
+    images: ["images/Chakras/Chakra1.png", "images/Elements/Tierra.png"]
+  },
+  {
+    num: 2,
+    position: "Sacro",
+    sansName: "Swadishthana",
+    frase: "Yo deseo",
+    element: "Agua",
+    characteristic: "Placer",
+    blocks: "Culpa",
+    images: ["images/Chakras/Chakra2.png", "images/Elements/Agua.png"]
+  },
+  {
+    num: 3,
+    position: "Plexo Solar",
+    sansName: "Manipura",
+    frase: "Yo puedo",
+    element: "Fuego",
+    characteristic: "Fuerza de voluntad",
+    blocks: "Verguenza",
+    images: ["images/Chakras/Chakra3.png", "images/Elements/fuego.png"]
+  },
+  {
+    num: 4,
+    position: "Corazon",
+    sansName: "Anahata",
+    frase: "Yo amo",
+    element: "Aire",
+    characteristic: "Amor",
+    blocks: "Dolor",
+    images: ["images/Chakras/Chakra4.png", "images/Elements/Aire.png"]
+  },
+  {
+    num: 5,
+    position: "Garganta",
+    sansName: "Vishuda",
+    frase: "Yo hablo",
+    element: "Sonido",
+    characteristic: "Verdad",
+    blocks: "Mientira",
+    images: ["images/Chakras/Chakra5.png", "images/Elements/Sonido.png"]
+  },
+  {
+    num: 6,
+    position: "Tercer Ojo",
+    sansName: "Ajña",
+    frase: "Yo comprendo",
+    element: "Luz",
+    characteristic: "Discernimiento",
+    blocks: "Ilusion",
+    images: ["images/Chakras/Chakra6.png", "images/Elements/Luz.png"]
+  },
+  {
+    num: 7,
+    position: "Corona",
+    sansName: "Sahasrara",
+    frase: "Yo soy",
+    element: "Pensamiento",
+    characteristic: "Energia Cosmica",
+    blocks: "Lazos Mundanos",
+    images: ["images/Chakras/Chakra7.png", "images/Elements/Pensamiento.png"]
+  }
+];
+let chakraStatus = 1;
+const chakraScore = [0, 0, 0, 0, 0, 0, 0, 0];
+let lives = 3;
+let items = [];
+let frames = 0;
 window.onload = () => {
   document.getElementById("start-button").onclick = () => {
     startGame();
   };
-
-  ctx.fillRect(0, 0, 400, 200);
 
   class Background {
     constructor() {
@@ -20,7 +94,7 @@ window.onload = () => {
     gameOver() {
       clearInterval(interval);
       ctx.font = "80px Avenir";
-      ctx.fillText("Game Over", 50, 400);
+      ctx.fillText("Game Over", 200, 300);
     }
     draw() {
       ctx.drawImage(this.imagen, this.x, this.y, this.width, this.height);
@@ -72,11 +146,14 @@ window.onload = () => {
       this.y = -40;
       this.width = 40;
       this.height = 40;
+      this.chakra = chakras[Math.floor(Math.random() * chakras.length)];
+      this.chakraNum = this.chakra.num;
+      this.image = new Image();
+      this.image.src = this.chakra.images[Math.floor(Math.random() * 2)];
     }
     draw() {
-      if (frames % 10) this.y += 5;
-      ctx.fillStyle = "red";
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+      if (frames % 10) this.y += 2;
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
   }
   class Meditator {
@@ -106,18 +183,9 @@ window.onload = () => {
       );
     }
   }
-  let chakraStatus = 1;
   const fondo = new Background();
   const avatar = new Avatar();
   const meditator = new Meditator();
-  const firstChakraArr = [];
-  const secondChakraArr = [];
-  const thirdChakraArr = [];
-  const fourthChakraArr = [];
-  const fifthChakraArr = [];
-  const sixthChakraArr = [];
-  const seventhChakraArr = [];
-  var items = [];
 
   function generateItems() {
     if (frames % 100 == 0) {
@@ -132,12 +200,17 @@ window.onload = () => {
       // Checamos colisiones
       if (avatar.collision(item)) {
         // Ejecutaremos el gameOver
-        fondo.gameOver();
+        if (item.chakraNum === chakraStatus) {
+          chakraScore[chakraStatus]++;
+          item.y = item.y + 200;
+        } else {
+          lives--;
+        }
+        if (lives === 0) fondo.gameOver();
       }
     });
   }
 
-  var frames = 0;
   var interval = setInterval(function() {
     frames++;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -146,6 +219,15 @@ window.onload = () => {
     meditator.draw();
     generateItems();
     drawingItems();
+    ctx.font = "20px Avenir";
+    ctx.fillText(`Vidas: ${lives}`, 10, 80);
+    ctx.fillText(`Chakra 7: ${chakraScore[7]}`, 10, 100);
+    ctx.fillText(`Chakra 6: ${chakraScore[6]}`, 10, 130);
+    ctx.fillText(`Chakra 5: ${chakraScore[5]}`, 10, 160);
+    ctx.fillText(`Chakra 4: ${chakraScore[4]}`, 10, 190);
+    ctx.fillText(`Chakra 3: ${chakraScore[3]}`, 10, 220);
+    ctx.fillText(`Chakra 2: ${chakraScore[2]}`, 10, 250);
+    ctx.fillText(`Chakra 1: ${chakraScore[1]}`, 10, 280);
   }, 1000 / 60);
 
   addEventListener("keydown", function(event) {
@@ -169,4 +251,7 @@ window.onload = () => {
     }
   });
 };
-function startGame() {}
+function startGame() {
+  chakraStatus = 1;
+  chakraScore = chakraScore.map(x => (x = 0));
+}
