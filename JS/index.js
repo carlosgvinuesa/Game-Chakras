@@ -10,9 +10,9 @@ window.onload = () => {
 
   class Background {
     constructor() {
-      this.x = 0;
+      this.x = 120;
       this.y = 0;
-      this.width = canvas.width;
+      this.width = canvas.width - 120;
       this.height = canvas.height;
       this.imagen = new Image();
       this.imagen.src = "images/background.jpg";
@@ -68,10 +68,10 @@ window.onload = () => {
   }
   class Item {
     constructor() {
-      this.x = Math.floor(Math.random() * canvas.width - 120);
-      this.y = -20;
-      this.width = Math.floor(Math.random() * 100 + 100);
-      this.height = 20;
+      this.x = 120 + Math.floor(Math.random() * (canvas.width - 140));
+      this.y = -40;
+      this.width = 40;
+      this.height = 40;
     }
     draw() {
       if (frames % 10) this.y += 5;
@@ -82,7 +82,7 @@ window.onload = () => {
   class Meditator {
     constructor() {
       this.x = 20;
-      this.y = 30;
+      this.y = 400;
       this.width = 100;
       this.height = 113;
       this.sx = 15;
