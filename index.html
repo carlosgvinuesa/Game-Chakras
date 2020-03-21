@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles/style.css">
-  <title>Chakra Power</title>
-</head>
-<body>
-  <h1>Welcome to Chakra Power</h1>
-  <div class="game-intro">
-    <img src="./images/Iroh.png" alt="" class="logo-img" />
-    <br />
-    <button id="start-button">StartGame</button>
-    <p>Use the left and right arrow to control the avatar!</p>
-    <img src="./images/arrows.png" alt="" class="arrows-img" />
-  </div>
-  <div id="game-board">
-    <canvas id="canvas" width="920" height="510"></canvas>
-  </div>
-  <script type="text/javascript" src="JS/index.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Acme|Merienda|Permanent+Marker&display=swap"
+      rel="stylesheet"
+    />
+    <title>Chakra Power</title>
+  </head>
+  <body>
+    <h1>Welcome to Chakra Power</h1>
+    <div id="intro-board">
+      <div class="game-intro">
+        <img src="./images/Iroh.png" alt="" class="logo-img" />
+        <br />
+        <p>Instrucciones</p>
+       
+        <button id="instruc1">1</button>
+        <button id="instruc2">2</button>
+        <button id="instruc3">3</button>
+        <button id="instruc4">4</button>
+        <button id="instruc5">5</button>
+        <button id="instruc6">6</button>
+        <button id="instruc7">7</button>
+        <br />
+        <button id="start-button">StartGame</button>
+      </div>
+      <div id="game-board">
+        <canvas id="canvas" width="920" height="510"></canvas>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="JS/index.js"></script>
+  </body>
 </html>

@@ -1,16 +1,26 @@
 body {
   padding: 0;
   text-align: center;
+  background-image: url("../images/background3.jpg");
 }
+h1 {
+  font-size: 90px;
+  color: #ede9ce;
+  font-family: "Permanent Marker", cursive;
 
+  margin-bottom: 0 0 30 0;
+}
+#intro-board{
+  display:flex;
+
+}
 .game-intro {
-  float: left;
-  padding: 0% 10%;
+  width:30%;
 }
 
 .game-intro p {
   font-size: 18px;
-  font-family: "Verdana"
+  font-family: "Verdana";
 }
 
 .logo-img {
@@ -22,6 +32,16 @@ body {
 }
 
 body button {
+  font-size: 15px;
+  background-color: #870007;
+  color: #fff;
+  padding: 5px 5px;
+  border: 0;
+  box-shadow: 0;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+#start-button{
   font-size: 30px;
   background-color: #870007;
   color: #fff;
@@ -31,8 +51,8 @@ body button {
   border-radius: 5px;
   margin-bottom: 20px;
 }
-
 #game-board {
-    float: left;
-    padding: 20px 0px;
+  float: left;
+  padding: 20px 0px;
 }
+p

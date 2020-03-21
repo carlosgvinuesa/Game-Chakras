@@ -1,6 +1,13 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start-button");
+const instruc1 = document.querySelector("#instruc1");
+const instruc2 = document.querySelector("#instruc2");
+const instruc3 = document.querySelector("#instruc3");
+const instruc4 = document.querySelector("#instruc4");
+const instruc5 = document.querySelector("#instruc5");
+const instruc6 = document.querySelector("#instruc6");
+const instruc7 = document.querySelector("#instruc7");
 const chakras = [
   {
     num: 1,
@@ -73,12 +80,13 @@ const chakras = [
     images: ["images/Chakras/Chakra7.png", "images/Elements/Pensamiento.png"]
   }
 ];
+let instrucSlide = 0;
 let chakraStatus = 1;
 let chakraScore = [0, 0, 0, 0, 0, 0, 0, 0];
 let lives = 3;
 let items = [];
 let frames = 0;
-let goal = 1;
+let goal = 5;
 let points = 0;
 let time = 0;
 let player = "player1";
@@ -114,38 +122,38 @@ class Background {
     ctx.drawImage(this.imagen, this.x, this.y, this.width, this.height);
     time = Math.floor(frames / 60);
     points = chakraScore.reduce((a, b) => a + b);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.font = "20px Avenir";
     ctx.fillText(`Time: ${time}`, 10, 50);
     ctx.fillText(`Points: ${points}`, 10, 80);
-    ctx.fillText(`Vidas: ${lives}`, 10, 120);
+    ctx.fillText(`Lives: ${lives}`, 10, 120);
     ctx.fillStyle = "#c242f5";
     ctx.fillRect(0, 137, (120 / goal) * chakraScore[7], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 7: ${chakraScore[7]}`, 10, 160);
     ctx.fillStyle = "#1333a8";
     ctx.fillRect(0, 167, (120 / goal) * chakraScore[6], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 6: ${chakraScore[6]}`, 10, 190);
     ctx.fillStyle = "#a0e7e8";
     ctx.fillRect(0, 197, (120 / goal) * chakraScore[5], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 5: ${chakraScore[5]}`, 10, 220);
     ctx.fillStyle = "#3f7349";
     ctx.fillRect(0, 227, (120 / goal) * chakraScore[4], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 4: ${chakraScore[4]}`, 10, 250);
     ctx.fillStyle = "#faef23";
     ctx.fillRect(0, 257, (120 / goal) * chakraScore[3], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 3: ${chakraScore[3]}`, 10, 280);
     ctx.fillStyle = "#e38839";
     ctx.fillRect(0, 287, (120 / goal) * chakraScore[2], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 2: ${chakraScore[2]}`, 10, 310);
     ctx.fillStyle = "#b82e21";
     ctx.fillRect(0, 317, (120 / goal) * chakraScore[1], 30);
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#ede9ce";
     ctx.fillText(`Chakra 1: ${chakraScore[1]}`, 10, 340);
     if (player === "player1") {
       player1.points = points;
@@ -238,7 +246,7 @@ class Item {
     this.image.src = this.chakra.images[Math.floor(Math.random() * 2)];
   }
   draw() {
-    if (frames % 10) this.y += 2;
+    if (frames % 2) this.y += 4;
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
@@ -388,3 +396,61 @@ function startGame() {
   requestId = requestAnimationFrame(update);
 }
 startButton.onclick = startGame;
+
+class Introslide {
+  constructor() {
+    this.x = 120;
+    this.y = 0;
+    this.width = canvas.width - 120;
+    this.height = canvas.height;
+    this.image = new Image();
+    this.image.src = "images/instruc1.png";
+  }
+  draw() {
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+}
+const introslide = new Introslide();
+
+function instructions1() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc1.png"
+  introslide.draw();
+}
+function instructions2() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc2.png"
+  introslide.draw();
+}
+function instructions3() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc3.png"
+  introslide.draw();
+}
+function instructions4() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc4.png"
+  introslide.draw();
+}
+function instructions5() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc5.png"
+  introslide.draw();
+}
+function instructions6() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc6.png"
+  introslide.draw();
+}
+function instructions7() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  introslide.image.src = "images/instruc7.png"
+  introslide.draw();
+}
+instruc1.onclick = instructions1;
+instruc2.onclick = instructions2;
+instruc3.onclick = instructions3;
+instruc4.onclick = instructions4;
+instruc5.onclick = instructions5;
+instruc6.onclick = instructions6;
+instruc7.onclick = instructions7;
