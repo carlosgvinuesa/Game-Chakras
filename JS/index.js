@@ -1,6 +1,6 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const button = document.querySelector("button");
+const startButton = document.querySelector("#start-button");
 const chakras = [
   {
     num: 1,
@@ -79,6 +79,22 @@ let lives = 3;
 let items = [];
 let frames = 0;
 let goal = 3;
+let points = 0;
+let time = 0;
+let player = "player1";
+let player1 = {
+  points: 0,
+  time: 0
+};
+let player2 = {
+  points: 0,
+  time: 0
+};
+let record = {
+  points: 0,
+  time: 0,
+  owner: "no record"
+};
 const audio = new Audio();
 audio.src =
   "http://audio.avatarspiritmedia.net/atla/ATLA%20321%20-%20Series%20Finale%20End%20Credits.mp3";
@@ -96,41 +112,89 @@ class Background {
 
   draw() {
     ctx.drawImage(this.imagen, this.x, this.y, this.width, this.height);
-    let time = Math.floor(frames / 60);
-    let points = chakraScore.reduce((a,b)=>a+b)
+    time = Math.floor(frames / 60);
+    console.log(frames);
+    points = chakraScore.reduce((a, b) => a + b);
     ctx.fillStyle = "grey";
     ctx.font = "20px Avenir";
     ctx.fillText(`Time: ${time}`, 10, 50);
     ctx.fillText(`Points: ${points}`, 10, 80);
     ctx.fillText(`Vidas: ${lives}`, 10, 120);
     ctx.fillStyle = "#c242f5";
-    ctx.fillRect(0,137,120/goal*chakraScore[7],30)
+    ctx.fillRect(0, 137, (120 / goal) * chakraScore[7], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 7: ${chakraScore[7]}`, 10, 160);
     ctx.fillStyle = "#1333a8";
-    ctx.fillRect(0,167,120/goal*chakraScore[6],30)
+    ctx.fillRect(0, 167, (120 / goal) * chakraScore[6], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 6: ${chakraScore[6]}`, 10, 190);
     ctx.fillStyle = "#a0e7e8";
-    ctx.fillRect(0,197,120/goal*chakraScore[5],30)
+    ctx.fillRect(0, 197, (120 / goal) * chakraScore[5], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 5: ${chakraScore[5]}`, 10, 220);
     ctx.fillStyle = "#3f7349";
-    ctx.fillRect(0,227,120/goal*chakraScore[4],30)
+    ctx.fillRect(0, 227, (120 / goal) * chakraScore[4], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 4: ${chakraScore[4]}`, 10, 250);
     ctx.fillStyle = "#faef23";
-    ctx.fillRect(0,257,120/goal*chakraScore[3],30)
+    ctx.fillRect(0, 257, (120 / goal) * chakraScore[3], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 3: ${chakraScore[3]}`, 10, 280);
     ctx.fillStyle = "#e38839";
-    ctx.fillRect(0,287,120/goal*chakraScore[2],30)
+    ctx.fillRect(0, 287, (120 / goal) * chakraScore[2], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 2: ${chakraScore[2]}`, 10, 310);
     ctx.fillStyle = "#b82e21";
-    ctx.fillRect(0,317,120/goal*chakraScore[1],30)
+    ctx.fillRect(0, 317, (120 / goal) * chakraScore[1], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 1: ${chakraScore[1]}`, 10, 340);
+    ctx.fillStyle = "grey";
+    if (player === "player1") {
+      player1.points = points;
+      player1.time = time;
+      if (player1.points > record.points) {
+        record.points = points;
+        record.time = time;
+        record.owner = "Player1";
+      } else if (
+        player1.points === record.points &&
+        player1.time > record.time
+      ) {
+        record.points = points;
+        record.time = time;
+        record.owner = "Player1";
+      }
+    } else {
+      player2.points = points;
+      player2.time = time;
+      if (player2.points > record.points) {
+        record.points = points;
+        record.time = time;
+        record.owner = "Player2";
+      } else if (
+        player2.points === record.points &&
+        player2.time > record.time
+      ) {
+        record.points = points;
+        record.time = time;
+        record.owner = "Player2";
+      }
+    }
+    ctx.fillText(
+      `Record - Points: ${record.points}  Time: ${record.time} sec  Record Owner: ${record.owner}`,
+      130,
+      20
+    );
+    ctx.fillText(
+      `Player 1 - Points: ${player1.points}  Time: ${player1.time} sec`,
+      130,
+      60
+    );
+    ctx.fillText(
+      `Player 2 - Points: ${player2.points}  Time: ${player2.time} sec`,
+      130,
+      90
+    );
   }
 }
 
@@ -138,12 +202,12 @@ class Avatar {
   constructor() {
     this.x = 500;
     this.y = canvas.height - 100;
-    this.width = 67;
-    this.height = 74;
-    this.sx = 100;
-    this.sy = 170;
-    this.sw = 750;
-    this.sh = 830;
+    this.width = 75;
+    this.height = 83;
+    this.sx = player === "player1" ? 100 : 12;
+    this.sy = player === "player1" ? 170 : 0;
+    this.sw = player === "player1" ? 750 : 460;
+    this.sh = player === "player1" ? 830 : 500;
     this.image = new Image();
     this.image.src = "images/aang-meditando.png";
   }
@@ -229,7 +293,7 @@ function drawingItems() {
     // Checamos colisiones
     if (avatar.collision(item)) {
       // Ejecutaremos el gameOver
-      if (item.chakraNum === chakraStatus && chakraScore[chakraStatus]<goal) {
+      if (item.chakraNum === chakraStatus && chakraScore[chakraStatus] < goal) {
         chakraScore[chakraStatus]++;
         item.y = item.y + 200;
       } else {
@@ -239,20 +303,6 @@ function drawingItems() {
       if (lives === 0) gameOver();
     }
   });
-}
-
-function update() {
-  frames++;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  fondo.draw();
-  avatar.draw();
-  meditator.draw();
-  generateItems();
-  drawingItems();
-  if (!requestId) gameOver();
-  if (requestId) {
-    requestId = requestAnimationFrame(update);
-  }
 }
 
 addEventListener("keydown", function(event) {
@@ -276,25 +326,58 @@ addEventListener("keydown", function(event) {
   }
 });
 
+function update() {
+  frames++;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  fondo.draw();
+  avatar.draw();
+  meditator.draw();
+  generateItems();
+  drawingItems();
+  if (!requestId) gameOver();
+  if (requestId) {
+    requestId = requestAnimationFrame(update);
+  }
+}
 function gameOver() {
   requestId = undefined;
-  audio.pause();
-  button.onclick = restart;
   ctx.font = "80px Avenir";
-  ctx.fillText("Game Over", 200, 300);
+  player === "player1"
+    ? ctx.fillText("Player2 turn", 300, 300)
+    : ctx.fillText("Game Over", 300, 300);
+  audio.pause();
+  startButton.onclick = restart;
 }
 function restart() {
   chakraStatus = 1;
+  meditator.sx = 15;
+  frames = 0;
   lives = 3;
   points = 0;
+  time = 0;
   chakraScore = chakraScore.map(x => (x = 0));
   audio.currentTime = 0;
-  avatar.x= 500;
+  avatar.x = 500;
   items = [];
+  if (player === "player1") {
+    player = "player2";
+    avatar.image.src = "images/GuruPathik.png";
+    avatar.sx = 12;
+    avatar.sy = 0;
+    avatar.sw = 460;
+    avatar.sh = 500;
+  } else {
+    player = "player1";
+    avatar.image.src = "images/aang-meditando.png";
+    avatar.sx = 100;
+    avatar.sy = 170;
+    avatar.sw = 750;
+    avatar.sh = 830;
+  }
   startGame();
 }
 function startGame() {
   audio.play();
   requestId = requestAnimationFrame(update);
 }
-button.onclick = startGame;
+startButton.onclick = startGame;
