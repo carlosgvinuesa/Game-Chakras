@@ -78,7 +78,7 @@ let chakraScore = [0, 0, 0, 0, 0, 0, 0, 0];
 let lives = 3;
 let items = [];
 let frames = 0;
-let goal = 3;
+let goal = 1;
 let points = 0;
 let time = 0;
 let player = "player1";
@@ -113,7 +113,6 @@ class Background {
   draw() {
     ctx.drawImage(this.imagen, this.x, this.y, this.width, this.height);
     time = Math.floor(frames / 60);
-    console.log(frames);
     points = chakraScore.reduce((a, b) => a + b);
     ctx.fillStyle = "grey";
     ctx.font = "20px Avenir";
@@ -148,7 +147,6 @@ class Background {
     ctx.fillRect(0, 317, (120 / goal) * chakraScore[1], 30);
     ctx.fillStyle = "grey";
     ctx.fillText(`Chakra 1: ${chakraScore[1]}`, 10, 340);
-    ctx.fillStyle = "grey";
     if (player === "player1") {
       player1.points = points;
       player1.time = time;
@@ -173,28 +171,23 @@ class Background {
         record.owner = "Player2";
       } else if (
         player2.points === record.points &&
-        player2.time > record.time
+        player2.time < record.time
       ) {
         record.points = points;
         record.time = time;
         record.owner = "Player2";
       }
     }
-    ctx.fillText(
-      `Record - Points: ${record.points}  Time: ${record.time} sec  Record Owner: ${record.owner}`,
-      130,
-      20
-    );
-    ctx.fillText(
-      `Player 1 - Points: ${player1.points}  Time: ${player1.time} sec`,
-      130,
-      60
-    );
-    ctx.fillText(
-      `Player 2 - Points: ${player2.points}  Time: ${player2.time} sec`,
-      130,
-      90
-    );
+    ctx.fillStyle = "#ede9ce";
+    ctx.fillText(`Player 1: Aang`, 130, 20);
+    ctx.fillText(`Points: ${player1.points}`, 130, 50);
+    ctx.fillText(`Time: ${player1.time} sec`, 130, 80);
+    ctx.fillText(`Player 2: Guru Pathik`, 300, 20);
+    ctx.fillText(`Points: ${player2.points}`, 300, 50);
+    ctx.fillText(`Time: ${player2.time} sec`, 300, 80);
+    ctx.fillText(`Record: ${record.owner}`, 750, 20);
+    ctx.fillText(`Points: ${record.points}`, 750, 50);
+    ctx.fillText(`Time: ${record.time} sec`, 750, 80);
   }
 }
 
@@ -235,7 +228,7 @@ class Avatar {
 }
 class Item {
   constructor() {
-    this.x = 120 + Math.floor(Math.random() * (canvas.width - 140));
+    this.x = 120 + Math.floor(Math.random() * (canvas.width - 150));
     this.y = -40;
     this.width = 40;
     this.height = 40;
@@ -300,7 +293,8 @@ function drawingItems() {
         lives--;
         item.y = item.y + 200;
       }
-      if (lives === 0) gameOver();
+      if (lives === 0 || chakraScore.reduce((a, b) => a + b) === goal * 7)
+        gameOver();
     }
   });
 }
@@ -340,11 +334,24 @@ function update() {
   }
 }
 function gameOver() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  fondo.draw();
   requestId = undefined;
   ctx.font = "80px Avenir";
-  player === "player1"
-    ? ctx.fillText("Player2 turn", 300, 300)
-    : ctx.fillText("Game Over", 300, 300);
+  if (player === "player1") {
+    ctx.fillText("Player2 turn", 300, 300);
+  } else {
+    if (player2.points > player1.points) {
+      ctx.fillText("Game Over", 300, 200);
+      ctx.fillText("Player 2 Wins!", 300, 300);
+    } else if (player2.points === record.points && player2.time < record.time) {
+      ctx.fillText("Game Over", 300, 200);
+      ctx.fillText("Player 2 Wins!", 300, 300);
+    } else {
+      ctx.fillText("Game Over", 300, 200);
+      ctx.fillText("Player 1 Wins!", 300, 300);
+    }
+  }
   audio.pause();
   startButton.onclick = restart;
 }
